@@ -1,3 +1,6 @@
+require 'converalls'
+Converalls.wear!
+
 RSpec.configure do |config|
   config.order = :random
   Kernel.srand config.seed
