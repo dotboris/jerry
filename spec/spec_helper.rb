@@ -1,5 +1,9 @@
-require 'converalls'
-Converalls.wear!
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
+
+silence_warnings do
+  require 'coveralls'
+  Coveralls.wear!
+end
 
 RSpec.configure do |config|
   config.order = :random
