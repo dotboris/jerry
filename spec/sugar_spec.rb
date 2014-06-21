@@ -26,6 +26,15 @@ describe Jerry::Sugar do
     end
 
     describe 'defined method' do
+      it 'should have the right self set' do
+        sugar.component(:_self) { self }
+        instance = sugar.new
+
+        expect(instance._self).not_to be_a Class
+        expect(instance._self).to be_a sugar
+        expect(instance._self).to eq(instance)
+      end
+
       context 'with scope set to :single' do
         it 'should only call the block once' do
           call_count = 0

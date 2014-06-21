@@ -13,6 +13,7 @@ class Jerry
   def <<(config)
     components = config.components
     components.each { |component| @index[component] = config }
+    config.jerry = self
   end
 
   def rig(component)

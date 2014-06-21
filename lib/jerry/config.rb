@@ -10,7 +10,17 @@ class Jerry
       self.class.components
     end
 
+    attr_writer :jerry
+
     protected
+
+    def rig(component)
+      @jerry.rig component
+    end
+
+    def knows?(component)
+      @jerry.knows? component
+    end
 
     def cache
       @cache ||= {}

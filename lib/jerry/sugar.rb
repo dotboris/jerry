@@ -17,9 +17,9 @@ class Jerry
       define_method name do
         case scope
           when :single
-            cache[name] ||= block.call
+            cache[name] ||= instance_eval(&block)
           when :instance
-            block.call
+            instance_eval(&block)
         end
       end
 
