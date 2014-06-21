@@ -62,7 +62,7 @@ Finally, when you want to build your application, ask jerry to do it for you.
 Scopes
 ------
 
-The `component` method let's you specify a scope. The scope can either be `:single` or `:instance` and the default is
+The `component` method lets you specify a scope. The scope can either be `:single` or `:instance` and the default is
 `:single`. If you set the scope to `:single` only one instance of the component will be created. If you set it to
 `:instance`, a new instance of the component will be created each time you call `rig`.
 
@@ -85,7 +85,7 @@ The `component` method let's you specify a scope. The scope can either be `:sing
 Multiple configs
 ----------------
 
-Jerry let's you use multiple configs. This way you can organize your configs however you want. You can pass multiple
+Jerry lets you use multiple configs. This way you can organize your configs however you want. You can pass multiple
 configs to `Jerry.new` or you can use `jerry << SomeConfig.new` to add configs to jerry.
 
 If two configs define the same component, the config that was inserted last will have priority. With `Jerry.new`, the
