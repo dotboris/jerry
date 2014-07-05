@@ -12,10 +12,11 @@ require 'jerry/config'
 #   jerry = Jerry.new MyConfig.new
 #   jerry.rig :app #=> #<MyApp:...>
 class Jerry
+  # Indicated that an error occurred while rigging a component
   class RigError < StandardError; end
 
   # @param [Jerry::Config] configs Configs used to rig components. Multiple config can be given. If two configs
-  #   define the same component, the later one will have priority.
+  #   define the same component, the later config will have priority.
   def initialize(*configs)
     @index = {}
 

@@ -1,4 +1,5 @@
 class Jerry
+  # Indicated that an error occurred when defining a component
   class ComponentError < StandardError; end
 
   # Base class for all jerry configs.
@@ -63,15 +64,20 @@ class Jerry
     protected
 
     # Creates a component
+    #
+    # This should be used inside the block passed to Config::component
     def rig(component)
       @jerry.rig component
     end
 
     # Check if given component exists
+    #
+    # This should be used inside the block passed to Config::component
     def knows?(component)
       @jerry.knows? component
     end
 
+    # Used internally to cache single instance components
     def cache
       @cache ||= {}
     end
