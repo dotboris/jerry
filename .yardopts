@@ -1,2 +1,5 @@
 --protected
 --no-private
+-r README.md
+-
+LICENSE.txt
