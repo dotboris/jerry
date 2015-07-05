@@ -1,9 +1,7 @@
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
-silence_warnings do
-  require 'coveralls'
-  Coveralls.wear!
-end
+require 'coveralls'
+Coveralls.wear!
 
 RSpec.configure do |config|
   config.order = :random
