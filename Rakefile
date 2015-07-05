@@ -14,11 +14,11 @@ task lint: [:reek, :rubocop]
 desc 'Run rubocop linter on lib/**/*.rb'
 RuboCop::RakeTask.new :rubocop do |t|
   t.patterns = ['lib/**/*.rb']
-  t.fail_on_error = true
+  t.fail_on_error = false
 end
 
 desc 'Run reek linter on lib/**/*.rb'
 Reek::Rake::Task.new :reek do |t|
   t.source_files = 'lib/**/*.rb'
-  t.fail_on_error = true
+  t.fail_on_error = false
 end
