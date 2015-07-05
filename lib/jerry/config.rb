@@ -1,85 +1,55 @@
-class Jerry
-  # Indicated that an error occurred when defining a component
-  class ComponentError < StandardError; end
+require 'jerry/class_provider'
 
-  # Base class for all jerry configs.
+class Jerry
+  class InstanciationError < RuntimeError; end
+  # A configuration specifies how to wire parts of an application
   #
-  # A config is a class that tells jerry about a set of available
-  # components and how those should be created
+  # @abstract Subclass this class in order to create a configuration
+  # @example Basic usage
+  #   class Door; end
+  #   class Window; end
   #
-  # @abstract Subclass to define a config
-  # @example
+  #   class House
+  #     def initialize(door, window)
+  #       # ...
+  #     end
+  #   end
+  #
   #   class MyConfig < Jerry::Config
-  #     component(:service) { MyService.new }
-  #     component(:app) { MyApp.new rig(:service) }
+  #     bind House, [Door, Window]
+  #     bind Door
+  #     bind Window
   #   end
   class Config
     class << self
-      # @return [Array<Symbol>] list of the components defined by the config
-      def components
-        @components ||= []
-      end
-
-      # Defines a component
+      # Specify how to wire the dependencies of a given class
       #
-      # @param [Symbol] name name of the component
-      # @param [Hash] options options hash see supported options
-      # @option options [Symbol] (:single) The scope of the component. Can be either :single or :instance.
-      #   When the scope is :single, only one instance of the component will be created and every call
-      #   to Jerry#rig will return the same instance. When the scope is :instance, every call to Jerry#rig
-      #   will return a new instance.
-      # @yield Block used to instantiate the component. This block in only called when Jerry#rig is called.
-      # @raise [Jerry::ComponentError] when the block is missing or the scope is invalid
-      def component(name, options={}, &block)
-        raise Jerry::ComponentError, "could not define component #{name}, block is missing" if block.nil?
+      # @param klass [Class] The class to wire the dependencies for
+      # @param ctor_args [Array<Class, Symbol, Proc>] specifies the arguments to be
+      #   given to the constructor
+      def bind(klass, ctor_args = [])
+        provider = ClassProvider.new klass, ctor_args
+        providers[klass] = provider
+      end
 
-        scope = options[:scope] || :single
-        unless [:single, :instance].include? scope
-          raise Jerry::ComponentError, "could not define component #{name}, scope #{scope} is unknown"
-        end
-
-        define_method name do
-          case scope
-            when :single
-              cache[name] ||= instance_eval(&block)
-            when :instance
-              instance_eval(&block)
-          end
-        end
-
-        components << name
+      def providers
+        @providers ||= {}
       end
     end
 
-    # @return [Array<Symbol>] list of components defined by the config
-    def components
-      self.class.components
-    end
-
-    # Jerry instance the config is part of
-    #
-    # This gets set by Jerry when it loads a config
+    # The jerry instance this config is part of
     attr_writer :jerry
 
-    protected
+    # @return an instance of an object wired by the config
+    def [](key)
+      provider = self.class.providers[key]
 
-    # Creates a component
-    #
-    # This should be used inside the block passed to Config::component
-    def rig(component)
-      @jerry.rig component
-    end
-
-    # Check if given component exists
-    #
-    # This should be used inside the block passed to Config::component
-    def knows?(component)
-      @jerry.knows? component
-    end
-
-    # Used internally to cache single instance components
-    def cache
-      @cache ||= {}
+      if provider
+        provider.call @jerry
+      else
+        fail InstanciationError,
+             "Failed to instanciate #{key}. Can't find provider for it"
+      end
     end
   end
 end
