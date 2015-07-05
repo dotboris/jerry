@@ -25,8 +25,8 @@ class Jerry
       # Specify how to wire the dependencies of a given class
       #
       # @param klass [Class] The class to wire the dependencies for
-      # @param ctor_args [Array<Class, Symbol, Proc>] specifies the arguments to be
-      #   given to the constructor
+      # @param ctor_args [Array<Class, Symbol, Proc>] specifies the arguments to
+      #   be given to the constructor
       def bind(klass, ctor_args = [])
         provider = ClassProvider.new klass, ctor_args
         providers[klass] = provider
