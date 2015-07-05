@@ -11,9 +11,9 @@ YARD::Rake::YardocTask.new :doc
 
 task lint: [:reek, :rubocop]
 
-desc 'Run rubocop linter on lib/**/*.rb'
+desc 'Run rubocop linter on lib/**/*.rb and spec/**/*.rb'
 RuboCop::RakeTask.new :rubocop do |t|
-  t.patterns = ['lib/**/*.rb']
+  t.patterns = ['lib/**/*.rb', 'spec/**/*.rb']
   t.fail_on_error = false
 end
 
