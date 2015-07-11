@@ -1,53 +1,35 @@
 require 'jerry/version'
+require 'jerry/errors'
 require 'jerry/config'
 
 # Inversion of Control container.
 #
-# This class is in charge of bootstrapping your application. This is done by defining {Jerry::Config configs}.
+# This class is in charge of bootstrapping your application. This is done by
+# defining {Jerry::Config configs}.
 #
 # @example
 #   class MyConfig < Jerry::Config
 #     component(:app) { MyApp.new }
 #   end
+#
 #   jerry = Jerry.new MyConfig.new
 #   jerry.rig :app #=> #<MyApp:...>
 class Jerry
-  # Indicated that an error occurred while rigging a component
-  class RigError < StandardError; end
-
-  # @param [Jerry::Config] configs Configs used to rig components. Multiple config can be given. If two configs
-  #   define the same component, the later config will have priority.
   def initialize(*configs)
-    @index = {}
+    configs.each { |conf| conf.jerry = self }
 
-    configs.each { |config| self << config }
+    @configs = configs
   end
 
-  # Load a config
-  #
-  # @param [Jerry::Config] config Config to be loaded. If the loaded config defines a component already defined
-  #   by another config, the component from the new config will take priority.
-  def <<(config)
-    components = config.components
-    components.each { |component| @index[component] = config }
-    config.jerry = self
-  end
-
-  # Rigs a component
-  #
-  # @param [Symbol] component Component to rig.
-  # @return The component requested
-  # @raise [Jerry::RigError] when the requested component does not exist
-  def rig(component)
-    raise RigError, "could not find component #{component}" unless knows? component
-
-    @index[component].public_send component
-  end
-
-  # Checks if a component exists
-  #
-  # @param [Symbol] component component to check
-  def knows?(component)
-    @index.has_key? component
+  # @param key what to provide
+  # @return an insance of the sepcified key provided by one of the configs
+  # @raise [Jerry::InstanciationError] if can't instanciate key
+  def [](key)
+    config = @configs.find { |conf| conf.knows? key }
+    if config
+      config[key]
+    else
+      fail Jerry::InstanciationError, "Can't find #{key} in any config"
+    end
   end
 end

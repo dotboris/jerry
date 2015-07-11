@@ -1,7 +1,7 @@
 require 'jerry/class_provider'
+require 'jerry/errors'
 
 class Jerry
-  class InstanciationError < RuntimeError; end
   # A configuration specifies how to wire parts of an application
   #
   # @abstract Subclass this class in order to create a configuration
