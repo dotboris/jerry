@@ -4,114 +4,92 @@ Jerry
 [![Build Status](https://travis-ci.org/beraboris/jerry.svg?branch=master)](https://travis-ci.org/beraboris/jerry)
 [![Coverage Status](https://coveralls.io/repos/beraboris/jerry/badge.png)](https://coveralls.io/r/beraboris/jerry)
 
-Jerry rigs your application together. It's an [Inversion of Control](https://en.wikipedia.org/wiki/Inversion_of_control)
-container for ruby. Just tell Jerry how to build your application and it will set it all up for you.
+
+Jerry is a Ruby
+[Inversion of Control](https://en.wikipedia.org/wiki/Inversion_of_control)
+container. You tell it how your classes depend on one another and it will create
+your application and wire all the dependencies correctly.
 
 Installation
-============
+------------
 
-The usual stuff. Either
+Add it to your `Gemfile`
 
 ```ruby
-gem 'jerry'
+gem 'jerry', '~> 2.0'
 ```
 
-then
+then run
 
     $ bundle install
 
-or
-
-    $ gem install jerry
-
 Usage
-=====
+-----
 
-Let's say you have the following code:
+Jerry expect your classes to take their dependencies in their constructors. If
+you're not familiar with this pattern, it's called
+[Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection).
+It helps you decouple your code and allows you to build reusable components.
+
+Let's say you have the following class structure:
 
 ```ruby
-class Window; end
 class Door; end
+class Window; end
 
 class House
-  attr_reader :window, :door
-  
-  def initialize(window, door)
-    @window = window
-    @door = door
+  def initialize(door, window)
+    # ...
   end
 end
 ```
 
-First, require jerry:
+To create an instance of `House`, you need to call `new` passing an both an
+instance of `Door` and an instance of `Window`. Jerry can do this for you. All
+you have to do is create a configuration and tell jerry to use it.
 
 ```ruby
 require 'jerry'
-```
-    
-Then, define a config class. This class tells jerry how to construct your application.
 
-```ruby
-class MyConfig < Jerry::Config
-  component(:window) { Window.new }
-  component(:door) { Door.new }
-  component(:house) { House.new rig(:window), rig(:door) }
+class HouseConfig < Jerry::Config
+  bind Door
+  bind Window
+  bind House, [Door, Window]
 end
+
+jerry = Jerry.new HouseConfig.new
+jerry[House]
+# => #<House:0x00000002a54978
+#        @door=#<Door:0x00000002a54b08>,
+#        @window=#<Window:0x00000002a549a0>>
 ```
 
-The `component` method defines a component. Usually you'll want a component per class. The `rig` method tells jerry to
-build a component.
+Let's break the above example down a little bit.
 
-Finally, when you want to build your application, ask jerry to do it for you.
+First, we create the `HouseConfig` class.
 
-```ruby
-jerry = Jerry.new MyConfig.new
-house = jerry.rig :house
-```
+`HouseConfig` is used to tell jerry how to build your classes. This is a
+class you have to create. It has to inherit from `Jerry::Config`. Within this
+class you can use `bind` to tell jerry how to instantiate your classes.
 
-Scopes
-------
+`bind` takes two arguments. The first is the class you're telling jerry about.
+The second is a specification for the constructor arguments. If the second
+argument is missing, no arguments will be passed to the constructor.
 
-The `component` method lets you specify a scope. The scope can either be `:single` or `:instance` and the default is
-`:single`. If you set the scope to `:single` only one instance of the component will be created. If you set it to
-`:instance`, a new instance of the component will be created each time you call `rig`.
+When we're calling `bind Door`, we're telling jerry that the `Door` class should
+be instantiated by calling the constructor with no arguments. We're doing the
+same thing for `Window` class.
 
-```ruby
-class MyConfig < Jerry::Config
-  component(:window, scope: :instance) { Window.new }
-  component(:door, scope: :single) { Door.new }
-end
-jerry = Jerry.new MyConfig.new
+When we're calling `bind House, [Door, Window]`, we're telling jerry that the
+`House` class should be instantiated calling the constructor and passing an
+instance of `Door` as the first argument and an instance of `Window` as the
+second argument. Since we've told jerry about the `Door` and `Window` classes,
+it'll figure out how to instantiate those all by itself.
 
-window_a = jerry.rig :window
-window_b = jerry.rig :window
-window_a.object_id == window_b.object_id
-#=> false
+Second, we create an instance of the `Jerry` class passing in an instance of our
+configuration class. What's cool is that you can have multiple configurations.
+We'll look into this later on.
 
-door_a = jerry.rig :door
-door_b = jerry.rig :door
-door_a.object_id == door_b.object_id
-#=> true
-```
-
-Multiple configs
-----------------
-
-Jerry lets you use multiple configs. This way you can organize your configs however you want. You can pass multiple
-configs to `Jerry.new` or you can use `jerry << SomeConfig.new` to add configs to jerry.
-
-If two configs define the same component, the config that was inserted last will have priority. With `Jerry.new`, the
-later arguments have priority.
-
-```ruby
-class ConfA < Jerry::Config
-  component(:thing) { "from a" }
-end
-class ConfB < Jerry::Config
-  component(:thing) { "from b" }
-end
-jerry = Jerry.new ConfA.new, ConfB.new
-
-jerry.rig :thing
-#=> "from b"
-```
+Finally, we ask jerry to create an instance of the `House` class by using the
+`[]` operator. As you can see from the output, jerry passed in an instance of
+`Door` and `Window`.
