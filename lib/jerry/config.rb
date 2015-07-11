@@ -51,5 +51,10 @@ class Jerry
              "Failed to instanciate #{key}. Can't find provider for it"
       end
     end
+
+    # @return true if this config can provide the given key, false otherwise
+    def knows?(key)
+      self.class.providers.key? key
+    end
   end
 end
