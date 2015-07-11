@@ -7,14 +7,20 @@ require 'jerry/config'
 # This class is in charge of bootstrapping your application. This is done by
 # defining {Jerry::Config configs}.
 #
-# @example
-#   class MyConfig < Jerry::Config
-#     component(:app) { MyApp.new }
+# @example Basic usage
+#   class FooConfig < Jerry::Config
+#     # ...
 #   end
 #
-#   jerry = Jerry.new MyConfig.new
-#   jerry.rig :app #=> #<MyApp:...>
+#   class BarConfig < Jerry::Config
+#     # ...
+#   end
+#
+#   jerry = Jerry.new FooConfig.new, BarConfig.new
+#   jerry[SomeClass] #=> #<Someclass:...>
 class Jerry
+  # @param configs [Array<Jerry::Config>] configurations describing how to wire
+  #   your application
   def initialize(*configs)
     configs.each { |conf| conf.jerry = self }
 
