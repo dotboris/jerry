@@ -1,5 +1,7 @@
 --protected
 --no-private
 -r README.md
+lib/jerry.rb
+lib/**/*.rb
 -
 LICENSE.txt
