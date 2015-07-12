@@ -39,6 +39,7 @@ describe Jerry::Config do
         bind klass, [proc { @foobar }]
       end
       config = config_klass.new
+      config.jerry = jerry
 
       instance = config[klass]
       expect(instance.thing).to eq 'something private'
