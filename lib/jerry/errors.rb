@@ -12,5 +12,5 @@ class Jerry
   end
 
   # Failed to instanciate a class
-  class InstanciationError < RuntimeError; end
+  class InstanciationError < Jerry::Error; end
 end
