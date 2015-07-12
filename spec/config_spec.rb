@@ -28,6 +28,21 @@ describe Jerry::Config do
         bind Class.new
       end
     end
+
+    it 'should set self to config instance for all procs in spec' do
+      klass = Class.new do
+        attr_reader :thing
+        define_method(:initialize) { |thing| @thing = thing }
+      end
+      config_klass = Class.new(Jerry::Config) do
+        define_method(:initialize) { @foobar = 'something private' }
+        bind klass, [proc { @foobar }]
+      end
+      config = config_klass.new
+
+      instance = config[klass]
+      expect(instance.thing).to eq 'something private'
+    end
   end
 
   describe '#[]' do
@@ -46,9 +61,18 @@ describe Jerry::Config do
       provider = double 'provider'
       config_klass.send(:providers)[:foobar] = provider
 
-      expect(provider).to receive(:call).with(jerry)
+      expect(provider).to receive(:call).with(jerry, anything)
 
       config[:foobar]
+    end
+
+    it 'should pass config instance to the provider' do
+      provider = double 'provider'
+      config_klass.providers[:something] = provider
+
+      expect(provider).to receive(:call).with(anything, config)
+
+      config[:something]
     end
 
     it 'should fail when provider is missing' do

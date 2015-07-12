@@ -13,11 +13,12 @@ class Jerry
     end
 
     # @param jerry [Jerry] a jerry instance
+    # @param config [Jerry::Config] the config holding the provider
     # @return An instance of the class given in the constructor
-    def call(jerry)
+    def call(jerry, config)
       args = @args_spec.map do |spec|
         if spec.respond_to? :call
-          spec.call
+          config.instance_exec(jerry, config, &spec)
         else
           jerry[spec]
         end

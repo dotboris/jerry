@@ -45,7 +45,7 @@ class Jerry
       provider = self.class.providers[key]
 
       if provider
-        provider.call @jerry
+        provider.call @jerry, self
       else
         fail InstanciationError,
              "Failed to instanciate #{key}. Can't find provider for it"
