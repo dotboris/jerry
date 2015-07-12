@@ -78,7 +78,7 @@ describe Jerry do
       configs = 3.times.map { double_config 'some config', knows?: false }
       jerry = Jerry.new(*configs)
 
-      expect { jerry[:not_there] }.to raise_error(Jerry::InstanciationError)
+      expect { jerry[:not_there] }.to raise_error(Jerry::InstantiationError)
     end
   end
 end

@@ -76,7 +76,7 @@ describe Jerry::Config do
     end
 
     it 'should fail when provider is missing' do
-      expect { config[:not_there] }.to raise_error(Jerry::InstanciationError)
+      expect { config[:not_there] }.to raise_error(Jerry::InstantiationError)
     end
 
     it 'should wrap errors from the provider' do
@@ -86,7 +86,7 @@ describe Jerry::Config do
       config_klass.providers[:failing] = provider
 
       expect { config[:failing] }
-        .to raise_error(Jerry::InstanciationError) do |e|
+        .to raise_error(Jerry::InstantiationError) do |e|
         expect(e.cause.message).to eq 'something blew up'
       end
     end

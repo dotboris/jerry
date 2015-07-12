@@ -29,13 +29,13 @@ class Jerry
 
   # @param key what to provide
   # @return an insance of the sepcified key provided by one of the configs
-  # @raise [Jerry::InstanciationError] if can't instanciate key
+  # @raise [Jerry::InstantiationError] if can't instanciate key
   def [](key)
     config = @configs.find { |conf| conf.knows? key }
     if config
       config[key]
     else
-      fail Jerry::InstanciationError, "Can't find #{key} in any config"
+      fail Jerry::InstantiationError, "Can't find #{key} in any config"
     end
   end
 end
