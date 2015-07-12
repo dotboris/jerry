@@ -1,5 +1,6 @@
 require 'jerry'
 require 'fixtures/house'
+require 'fixtures/db_app'
 
 describe Jerry do
   def double_config(name, fields = {})
@@ -22,6 +23,24 @@ describe Jerry do
     expect(house).to be_a House
     expect(house.window).to be_a Window
     expect(house.door).to be_a Door
+  end
+
+  it 'should allow the use of procs to wire settings' do
+    AppConfig = Class.new Jerry::Config do
+      def initialize(database_uri)
+        @database_uri = database_uri
+      end
+
+      bind DbApplication, [Database]
+      bind Database, [proc { @database_uri }]
+    end
+
+    jerry = Jerry.new AppConfig.new('mongodb://localhost:27017')
+    app = jerry[DbApplication]
+
+    expect(app).to be_a DbApplication
+    expect(app.db).to be_a Database
+    expect(app.db.uri).to eq 'mongodb://localhost:27017'
   end
 
   it 'should set the jerry attribute on the configs' do
