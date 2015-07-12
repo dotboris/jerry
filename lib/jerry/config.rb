@@ -50,6 +50,8 @@ class Jerry
         fail InstanciationError,
              "Failed to instanciate #{key}. Can't find provider for it"
       end
+    rescue RuntimeError
+      raise InstanciationError, "Provider for #{key} raised an error"
     end
 
     # @return true if this config can provide the given key, false otherwise
