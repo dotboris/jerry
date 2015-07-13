@@ -94,6 +94,57 @@ Finally, we ask jerry to create an instance of the `House` class by using the
 `[]` operator. As you can see from the output, jerry passed in an instance of
 `Door` and `Window`.
 
+### Dealing with settings
+
+Sometimes, you want to wire settings into your classes. This is stuff like URIs,
+host names, port numbers, credentials and API keys. With jerry, you can just
+wire those into the constructor like you would do with regular classes. Let's
+look at an example.
+
+For this example, we're trying to wire together an application that talks to a
+database. The database has a URI that it connects to. Here's what it looks like.
+
+```ruby
+class Database
+  def initialize(uri)
+    @uri = uri
+  end
+end
+
+class Application
+  def initialize(db)
+    @db = db
+  end
+end
+```
+
+We can write a simple configuration for these classes. Here's what it looks
+like.
+
+```ruby
+class AppConfig < Jerry::Config
+  def initialize(database_uri)
+    @database_uri = database_uri
+  end
+
+  bind Database, [proc { @database_uri }]
+  bind Application, [Database]
+end
+
+jerry = Jerry.new AppConfig.new('foo://localhost:1234')
+jerry[Application]
+#=> #<Application:0x0000000178c110
+#       @db=#<Database:0x0000000178c138 @uri="foo://localhost:1234">>
+```
+
+There are two key things to notice here. First, `AppConfig` takes a single
+constructor argument. It's the database's URI. It takes this argument and stores
+it as an instance variable. Second, it passes a proc in the argument
+specification of the `bind` call. This is how the database uri is passed to the
+constructor. The proc is executed in the configuration's context. This means
+that you can access all the private methods and instance variables of the
+configuration.
+
 ### Multiples configurations
 
 Jerry allows you to define and use multiple configurations. This way you can
