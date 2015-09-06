@@ -28,8 +28,18 @@ class Jerry
       # @param ctor_args [Array<Class, Symbol, Proc>] specifies the arguments to
       #   be given to the constructor
       def bind(klass, ctor_args = [])
-        provider = ClassProvider.new klass, ctor_args
-        providers[klass] = provider
+        named_bind klass, klass, ctor_args
+      end
+
+      # Specify how to wire the dependencies of a given class giving it a name
+      #
+      # @param name [Symbol] The name used to identify this way of building the
+      #   given class
+      # @param klass [Class] The class to wire the dependencies for
+      # @param ctor_args [Array<Class, Symbol, Proc>] specifies the arguments to
+      #   be given to the constructor
+      def named_bind(name, klass, ctor_args = [])
+        providers[name] = ClassProvider.new klass, ctor_args
       end
 
       def providers

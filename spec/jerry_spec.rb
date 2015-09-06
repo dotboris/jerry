@@ -81,6 +81,26 @@ describe Jerry do
       be_a ShoppingCart::ProductService
   end
 
+  it 'should wire the same class multiple times with multiple names' do
+    klass = Class.new do
+      attr_reader :str
+      define_method(:initialize) { |str| @str = str }
+    end
+    config = Class.new Jerry::Config do
+      named_bind :foo, klass, [proc { 'foo' }]
+      named_bind :bar, klass, [proc { 'bar' }]
+    end
+    jerry = Jerry.new config.new
+
+    foo = jerry[:foo]
+    bar = jerry[:bar]
+
+    expect(foo).to be_a klass
+    expect(foo.str).to eq 'foo'
+    expect(bar).to be_a klass
+    expect(bar.str).to eq 'bar'
+  end
+
   it 'should set the jerry attribute on the configs' do
     alfa = spy 'alfa config'
     bravo = spy 'bravo config'
