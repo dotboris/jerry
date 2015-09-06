@@ -145,6 +145,72 @@ constructor. The proc is executed in the configuration's context. This means
 that you can access all the private methods and instance variables of the
 configuration.
 
+### Wire one class in multiple ways
+
+Sometimes, you want to wire a single class in more than one way. One example of
+this would be an application that connects to two databases. Here's what the
+classes would look like:
+
+```ruby
+class Database
+  attr_reader :uri
+
+  def initialize(uri)
+    @uri = uri
+  end
+end
+
+class Application
+  attr_reader :foo_db, :bar_db
+
+  def initialize(foo_db, bar_db)
+    @foo_db = foo_db
+    @bar_db = bar_db
+  end
+end
+```
+
+What we need here is two instances of the `Database` class. Each instance has
+a different URI. This can be done by using `named_bind`. Here's what it looks
+like:
+
+```ruby
+class MultiDbAppConfig < Jerry::Config
+  def initialize(foo_uri, bar_uri)
+    @foo_uri = foo_uri
+    @bar_uri = bar_uri
+  end
+
+  named_bind :foo_db, Database, [proc { @foo_uri }]
+  named_bind :bar_db, Database, [proc { @bar_uri }]
+  bind Application, [:foo_db, :bar_db]
+end
+
+jerry = Jerry.new MultiDbAppConfig.new(
+  'somedb://foo.db.net',
+  'somedb://bar.db.net'
+)
+
+jerry[Application]
+#=> #<Application:0x00000001b56340
+#     @bar_db=#<Database:0x00000001b56430 @uri="somedb://bar.db.net">,
+#     @foo_db=#<Database:0x00000001b565e8 @uri="somedb://foo.db.net">>
+```
+
+In the above example, we define a config that takes two arguments in its
+constructor. These are the URIs for the two databases (here called `foo` and
+`bar`).
+
+In this config, we use `named_bind` to tell jerry how to wire an instance of
+`Database` called `:foo_db` constructed by passing in `@foo_uri` as its first
+constructor argument. We do the same thing to tell jerry how to wire another
+instance of `Database` called `:bar_db` constructed by passing in `@bar_uri` as
+its first constructor argument.
+
+Finally, we use `bind` to tell jerry how to wire instances of `Application`.
+When specifying the constructor arguments, we use their names (`:foo_db` and
+`:bar_db`) to identify them.
+
 ### Multiples configurations
 
 Jerry allows you to define and use multiple configurations. This way you can
