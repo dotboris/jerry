@@ -1,3 +1,4 @@
 Documentation:
   Exclude:
     - lib/jerry/version.rb
+    - spec/fixtures/*.rb

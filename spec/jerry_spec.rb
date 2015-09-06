@@ -1,6 +1,8 @@
 require 'jerry'
 require 'fixtures/house'
 require 'fixtures/db_app'
+require 'fixtures/shopping_cart'
+require 'fixtures/shopping_cart_config'
 
 describe Jerry do
   def double_config(name, fields = {})
@@ -41,6 +43,42 @@ describe Jerry do
     expect(app).to be_a DbApplication
     expect(app.db).to be_a Database
     expect(app.db.uri).to eq 'mongodb://localhost:27017'
+  end
+
+  it 'should support multiple configs' do
+    jerry = Jerry.new(
+      ShoppingCart::DatabaseConfig.new,
+      ShoppingCart::ApplicationConfig.new,
+      ShoppingCart::UserConfig.new,
+      ShoppingCart::ProductConfig.new,
+      ShoppingCart::ShoppingCartConfig.new
+    )
+
+    app = jerry[ShoppingCart::Application]
+
+    expect(app).to be_a ShoppingCart::Application
+
+    expect(app.user_controller).to be_a ShoppingCart::UserController
+    expect(app.product_controller).to be_a ShoppingCart::ProductController
+    expect(app.shopping_cart_controller).to \
+      be_a ShoppingCart::ShoppingCartController
+
+    expect(app.user_controller.user_service).to be_a ShoppingCart::UserService
+    expect(app.product_controller.product_service).to \
+      be_a ShoppingCart::ProductService
+    expect(app.shopping_cart_controller.shopping_cart_service).to \
+      be_a ShoppingCart::ShoppingCartService
+
+    expect(app.user_controller.user_service.db).to be_a ShoppingCart::Database
+    expect(app.product_controller.product_service.db).to \
+      be_a ShoppingCart::Database
+    expect(app.shopping_cart_controller.shopping_cart_service.db).to \
+      be_a ShoppingCart::Database
+
+    shopping_cart_service = app.shopping_cart_controller.shopping_cart_service
+    expect(shopping_cart_service.user_service).to be_a ShoppingCart::UserService
+    expect(shopping_cart_service.product_service).to \
+      be_a ShoppingCart::ProductService
   end
 
   it 'should set the jerry attribute on the configs' do
