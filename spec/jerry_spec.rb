@@ -3,6 +3,7 @@ require 'fixtures/house'
 require 'fixtures/db_app'
 require 'fixtures/shopping_cart'
 require 'fixtures/shopping_cart_config'
+require 'fixtures/multi_db_app'
 
 describe Jerry do
   def double_config(name, fields = {})
@@ -79,6 +80,15 @@ describe Jerry do
     expect(shopping_cart_service.user_service).to be_a ShoppingCart::UserService
     expect(shopping_cart_service.product_service).to \
       be_a ShoppingCart::ProductService
+  end
+
+  it 'should support wiring one class in multiple ways through naming' do
+    jerry = Jerry.new MultiDbApp::Config.new('db://foo', 'db://bar')
+
+    app = jerry[MultiDbApp::Application]
+
+    expect(app.foo_db.uri).to eq 'db://foo'
+    expect(app.bar_db.uri).to eq 'db://bar'
   end
 
   it 'should wire the same class multiple times with multiple names' do
