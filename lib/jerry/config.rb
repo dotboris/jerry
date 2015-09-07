@@ -27,6 +27,7 @@ class Jerry
       # @param klass [Class] The class to wire the dependencies for
       # @param ctor_args [Array<Class, Symbol, Proc>] specifies the arguments to
       #   be given to the constructor
+      # @return [Class] the class that will be instanciated
       def bind(klass, ctor_args = [])
         named_bind klass, klass, ctor_args
       end
@@ -38,8 +39,23 @@ class Jerry
       # @param klass [Class] The class to wire the dependencies for
       # @param ctor_args [Array<Class, Symbol, Proc>] specifies the arguments to
       #   be given to the constructor
+      # @return [Symbol] the name of the class that will be instanciated
       def named_bind(name, klass, ctor_args = [])
         providers[name] = ClassProvider.new klass, ctor_args
+        name
+      end
+
+      # Specifies that a class should only be instanciated once
+      #
+      # @param key [Class, Symbol] the class or the name of the class that
+      #   should only be instanciated once
+      def singleton(key)
+        return unless providers.key? key
+
+        provider = providers[key]
+
+        instance = nil
+        providers[key] = ->(*args) { instance ||= provider.call(*args) }
       end
 
       def providers

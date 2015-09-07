@@ -37,6 +37,17 @@ describe Jerry::Config do
 
       expect(config.providers).to have_key klass
     end
+
+    it 'should return the class' do
+      klass = Class.new
+      thing = nil
+
+      Class.new Jerry::Config do
+        thing = bind klass
+      end
+
+      expect(thing).to eq klass
+    end
   end
 
   describe '::named_bind' do
@@ -64,6 +75,42 @@ describe Jerry::Config do
       end
 
       expect(config.providers).to have_key :the_name
+    end
+
+    it 'should return the key' do
+      thing = nil
+
+      Class.new Jerry::Config do
+        thing = named_bind :foobar, Class.new
+      end
+
+      expect(thing).to eq :foobar
+    end
+  end
+
+  describe '::singleton' do
+    it 'should always use the same instance' do
+      config = Class.new Jerry::Config do
+        singleton named_bind :thing, Class.new
+      end
+
+      jerry = Jerry.new config.new
+      thing1 = jerry[:thing]
+      thing2 = jerry[:thing]
+
+      expect(thing1).to equal thing2
+    end
+
+    it 'should only instantiate the class once' do
+      klass = double 'class', new: double('instance')
+      config = Class.new Jerry::Config do
+        singleton bind klass
+      end
+
+      expect(klass).to receive(:new).once
+
+      jerry = Jerry.new config.new
+      2.times { jerry[klass] }
     end
   end
 
