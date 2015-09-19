@@ -3,5 +3,6 @@
 -r README.md
 lib/jerry.rb
 lib/**/*.rb
+-o html-doc
 -
 LICENSE.txt
