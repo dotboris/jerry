@@ -129,4 +129,4 @@ Learn more
 
 If you'd like to learn more, here's some more documentation:
 
-- [Multiple configurations](doc/multiple-configurations)
+- [Multiple configurations](doc/multiple-configurations.md)
