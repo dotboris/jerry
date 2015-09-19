@@ -12,4 +12,5 @@ guard 'rake', task: 'doc' do
   watch 'LICENSE.txt'
   watch(/.+\.(md|markdown)/)
   watch %r{^lib/}
+  watch %r{^doc/}
 end
