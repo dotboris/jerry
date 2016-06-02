@@ -1,8 +1,8 @@
 Jerry
 =====
 
-[![Build Status](https://travis-ci.org/beraboris/jerry.svg?branch=master)](https://travis-ci.org/beraboris/jerry)
-[![Coverage Status](https://coveralls.io/repos/beraboris/jerry/badge.png)](https://coveralls.io/r/beraboris/jerry)
+[![Build Status](https://travis-ci.org/dotboris/jerry.svg?branch=master)](https://travis-ci.org/dotboris/jerry)
+[![Coverage Status](https://coveralls.io/repos/github/dotboris/jerry/badge.svg?branch=master)](https://coveralls.io/github/dotboris/jerry?branch=master)
 
 Jerry is a Ruby
 [Inversion of Control](https://en.wikipedia.org/wiki/Inversion_of_control)
