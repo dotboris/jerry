@@ -176,5 +176,5 @@ Releasing
 1.  Run release job
 
     ```sh
-    bundle exec rake release
+    ./bin/rake release
     ```
