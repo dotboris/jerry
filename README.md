@@ -52,7 +52,9 @@ end
 
 Option 3: Just install it
 
-    $ gem install jerry
+```sh
+gem install jerry
+```
 
 ### Create a configuration class
 
@@ -129,4 +131,4 @@ Learn more
 
 If you'd like to learn more, here's some more documentation:
 
-- [Multiple configurations](doc/multiple-configurations.md)
+-   [Multiple configurations](doc/multiple-configurations.md)
