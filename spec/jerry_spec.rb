@@ -58,7 +58,7 @@ describe Jerry do
     end
 
     it 'should fail if no config know the key' do
-      configs = 3.times.map { double_config 'some config', knows?: false }
+      configs = Array.new(3) { double_config 'some config', knows?: false }
       jerry = Jerry.new(*configs)
 
       expect { jerry[:not_there] }.to raise_error(Jerry::InstantiationError)

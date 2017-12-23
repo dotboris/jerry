@@ -1,3 +1,18 @@
+AllCops:
+  Include:
+    - jerry.gempsec
+    - Gemfile
+    - Guardfile
+    - Rakefile
+    - lib/**/*.rb
+    - spec/**/*.rb
+
+Naming/FileName:
+  Exclude:
+    - Gemfile
+    - Rakefile
+    - Guardfile
+
 Documentation:
   Exclude:
     - lib/jerry/version.rb

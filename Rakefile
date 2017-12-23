@@ -12,6 +12,4 @@ desc 'Run code style checks'
 task lint: %i[rubocop]
 
 desc 'Run rubocop linter on lib/**/*.rb and spec/**/*.rb'
-RuboCop::RakeTask.new :rubocop do |t|
-  t.patterns = ['lib/**/*.rb', 'spec/**/*.rb']
-end
+RuboCop::RakeTask.new :rubocop

@@ -73,8 +73,8 @@ class Jerry
       if provider
         provider.call @jerry, self
       else
-        fail InstantiationError,
-             "Failed to instanciate #{key}. Can't find provider for it"
+        raise InstantiationError,
+              "Failed to instanciate #{key}. Can't find provider for it"
       end
     rescue RuntimeError
       raise InstantiationError, "Provider for #{key} raised an error"

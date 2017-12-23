@@ -17,12 +17,13 @@ describe Jerry::ClassProvider do
       instance = double 'instance'
       allow(klass).to receive(:new).and_return(instance)
 
-      expect(provider.call jerry, config).to eq instance
+      expect(provider.call(jerry, config)).to eq instance
     end
 
     it 'should pass constructor arguments in the right order' do
       provider = Jerry::ClassProvider.new klass, [
-        proc { 'fi' }, proc { 'fo' }, proc { 'fum' }]
+        proc { 'fi' }, proc { 'fo' }, proc { 'fum' }
+      ]
 
       expect(klass).to receive(:new).with('fi', 'fo', 'fum')
 

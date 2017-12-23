@@ -1,4 +1,4 @@
-# coding: utf-8
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'jerry/version'
@@ -8,8 +8,11 @@ Gem::Specification.new do |spec|
   spec.version       = Jerry::VERSION
   spec.authors       = ['Boris Bera']
   spec.email         = ['bboris@rsoft.ca']
-  spec.summary       = %q{Jerry rigs your application together. It's an Inversion of Control container.}
-  spec.description   = %q{Jerry is an Inversion of Control container. It allows you to decouple the code that bootstraps your application from the rest of your application}
+  spec.summary       = "Jerry rigs your application together. It's an " \
+                       'Inversion of Control container.'
+  spec.description   = 'Jerry is an Inversion of Control container. ' \
+                       'It allows you to decouple the code that bootstraps ' \
+                       'your application from the rest of your application'
   spec.homepage      = 'http://github.com/beraboris/jerry'
   spec.license       = 'MIT'
 

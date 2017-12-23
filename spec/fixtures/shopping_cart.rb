@@ -61,7 +61,7 @@ module ShoppingCart
     attr_reader :user_controller, :product_controller, :shopping_cart_controller
 
     def initialize(user_controller, product_controller,
-      shopping_cart_controller)
+                   shopping_cart_controller)
       @user_controller = user_controller
       @product_controller = product_controller
       @shopping_cart_controller = shopping_cart_controller

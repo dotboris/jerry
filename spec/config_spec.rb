@@ -182,11 +182,11 @@ describe Jerry::Config do
       key = double 'some key'
       config_klass.providers[key] = double 'some provider'
 
-      expect(config.knows? key).to be true
+      expect(config.knows?(key)).to be true
     end
 
     it 'should be false if key is not known' do
-      expect(config.knows? double('some unknown key')).to be false
+      expect(config.knows?(double('some unknown key'))).to be false
     end
   end
 end

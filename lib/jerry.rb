@@ -32,10 +32,10 @@ class Jerry
   # @raise [Jerry::InstantiationError] if can't instanciate key
   def [](key)
     config = @configs.find { |conf| conf.knows? key }
-    if config
-      config[key]
-    else
-      fail Jerry::InstantiationError, "Can't find #{key} in any config"
+    unless config
+      raise Jerry::InstantiationError, "Can't find #{key} in any config"
     end
+
+    config[key]
   end
 end

@@ -1,6 +1,6 @@
 describe Jerry::Error do
   def raise_error_with_cause
-    fail 'Something went wrong'
+    raise 'Something went wrong'
   rescue RuntimeError
     raise Jerry::Error, 'wrapping error'
   end
@@ -12,12 +12,12 @@ describe Jerry::Error do
   end
 
   it 'should not record the causing exception when there is none' do
-    expect { fail Jerry::Error }.to raise_error(Jerry::Error) do |ex|
+    expect { raise Jerry::Error }.to raise_error(Jerry::Error) do |ex|
       expect(ex.cause).to be_nil
     end
   end
 
   it 'should have a message' do
-    expect { fail Jerry::Error, ':(' }.to raise_error(Jerry::Error, ':(')
+    expect { raise Jerry::Error, ':(' }.to raise_error(Jerry::Error, ':(')
   end
 end

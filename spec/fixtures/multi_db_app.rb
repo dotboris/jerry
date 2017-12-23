@@ -26,6 +26,6 @@ module MultiDbApp
 
     named_bind :foo_db, Database, [proc { @foo_uri }]
     named_bind :bar_db, Database, [proc { @bar_uri }]
-    bind Application, [:foo_db, :bar_db]
+    bind Application, %i[foo_db bar_db]
   end
 end
