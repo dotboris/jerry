@@ -139,25 +139,25 @@ Development
 ### Setup
 
 ```sh
-bundle install
+./bin/setup
 ```
 
 ### Run tests
 
 ```sh
-bundle exec rake spec
+./bin/rake spec
 ```
 
 ### Run linter
 
 ```sh
-bundle exec rake lint
+./bin/rake lint
 ```
 
 ### Generate doc
 
 ```sh
-bundle exec rake doc
+./bin/rake doc
 ```
 
 Releasing
