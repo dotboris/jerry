@@ -159,3 +159,13 @@ bundle exec rake lint
 ```sh
 bundle exec rake doc
 ```
+
+Releasing
+---------
+
+1.  Bump version in `lib/jerry/version.rb`
+1.  Run release job
+
+    ```sh
+    bundle exec rake release
+    ```
