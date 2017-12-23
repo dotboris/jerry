@@ -160,6 +160,15 @@ Development
 ./bin/rake doc
 ```
 
+### Automatic watch
+
+This will automatically watch the source code and run the tests, run the linter
+and build the doc everytime some files change.
+
+```sh
+./bin/guard
+```
+
 Releasing
 ---------
 
