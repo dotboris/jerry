@@ -132,3 +132,30 @@ Learn more
 If you'd like to learn more, here's some more documentation:
 
 -   [Multiple configurations](doc/multiple-configurations.md)
+
+Development
+-----------
+
+### Setup
+
+```sh
+bundle install
+```
+
+### Run tests
+
+```sh
+bundle exec rake spec
+```
+
+### Run linter
+
+```sh
+bundle exec rake lint
+```
+
+### Generate doc
+
+```sh
+bundle exec rake doc
+```
