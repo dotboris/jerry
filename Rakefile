@@ -2,23 +2,16 @@ require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 require 'yard'
 require 'rubocop/rake_task'
-require 'reek/rake/task'
 
-task default: [:spec, :lint]
+task default: %i[spec lint]
 
 RSpec::Core::RakeTask.new :spec
 YARD::Rake::YardocTask.new :doc
 
-task lint: [:reek, :rubocop]
+desc 'Run code style checks'
+task lint: %i[rubocop]
 
 desc 'Run rubocop linter on lib/**/*.rb and spec/**/*.rb'
 RuboCop::RakeTask.new :rubocop do |t|
   t.patterns = ['lib/**/*.rb', 'spec/**/*.rb']
-  t.fail_on_error = false
-end
-
-desc 'Run reek linter on lib/**/*.rb'
-Reek::Rake::Task.new :reek do |t|
-  t.source_files = 'lib/**/*.rb'
-  t.fail_on_error = false
 end
