@@ -3,6 +3,7 @@ Jerry
 
 [![Build Status](https://travis-ci.org/dotboris/jerry.svg?branch=master)](https://travis-ci.org/dotboris/jerry)
 [![Coverage Status](https://coveralls.io/repos/github/dotboris/jerry/badge.svg?branch=master)](https://coveralls.io/github/dotboris/jerry?branch=master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/de21aa9323bb9cc906d0/maintainability)](https://codeclimate.com/github/dotboris/jerry/maintainability)
 
 Jerry is a Ruby
 [Inversion of Control](https://en.wikipedia.org/wiki/Inversion_of_control)
